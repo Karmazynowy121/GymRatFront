@@ -1,0 +1,50 @@
+﻿@page "/Training"
+@using GymRatApi.Dto
+
+<PageTitle>Training</PageTitle>
+
+
+<div class="training-contener">
+    @foreach(var training in trainings)
+    {
+        <div class="training-item" >
+            <EditForm Model="@training" >
+                <InputText @bind-Value="training.Description" />
+                <button type="submit">Zapisz</button>
+            </EditForm>
+            <p>@training.Description</p>
+        </div>
+    }        
+</div>
+
+@code 
+{
+    private List<TrainingDto> trainings = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+         var taskTraining = FetchTrainigData();
+    }
+
+private async Task FetchTrainigData()
+    {
+        var client = new HttpClient();
+        var respArray = await client.GetFromJsonAsync<List<TrainingDto>>("https://localhost:7060/Training");
+        if (respArray != null)
+        {
+            trainings = respArray;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+     private async void HandleValidSubmit(object e)
+    {
+       var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+       var trainingDto = moduleObject.Model as TrainingDto;
+
+       var client = new HttpClient();
+
+       var response = await client.PostAsJsonAsync("https://localhost:7060/Trainings/", trainingDto);
+
+    }
+}

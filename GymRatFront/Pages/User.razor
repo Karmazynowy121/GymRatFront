@@ -1,0 +1,62 @@
+﻿@page "/User"
+@using GymRatApi.Dto
+<PageTitle>User</PageTitle>
+<h2>Witaj na swoim panelu użytkowniku, poczuj się jak na własnej siłowni </h2>
+
+
+
+<div class="user-contener">
+    @if (userDetails != null)
+    {
+        <div class="user-item" >
+            <EditForm Model="@userDetails" OnSubmit="HandleValidSubmit">
+                <InputText @bind-Value="userDetails.Name" />
+                <InputText @bind-Value="userDetails.Email" />
+                <button type="submit">Zapisz</button>
+            </EditForm>
+            <p>@userDetails.Name</p>
+            <p>@userDetails.Email</p>
+            <p>@userDetails.CreateAt</p>
+        </div>
+    }        
+</div>
+@code {
+    private UserDto userDetails;
+    //private EditContext editContext;
+    private bool isChanged;
+    protected override async Task OnInitializedAsync()
+    {
+       // editContext = new EditContext(userDetails);
+       // editContext.OnFieldChanged += EditContext_OnFieldChanged;
+        await FetchUserData();
+    }
+
+    private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        isChanged = true;
+    }
+
+    private async Task FetchUserData()
+    {
+        var client = new HttpClient();
+        var respuser = await client.GetFromJsonAsync<UserDto>("https://localhost:7060/User/1");
+        if (respuser != null)
+        {
+            userDetails = respuser;
+        }
+    }
+    private async void HandleValidSubmit(object e)
+    {
+        if (isChanged == false)
+        {
+            return ;
+        }
+       var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+       var userDto = moduleObject.Model as UserDto;
+
+       var client = new HttpClient();
+
+       var response = await client.PostAsJsonAsync("https://localhost:7060/User/", userDto);
+
+    }
+}

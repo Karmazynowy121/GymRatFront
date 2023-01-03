@@ -1,0 +1,82 @@
+﻿@page "/"
+@using GymRatApi.Dto
+
+
+
+
+
+
+<PageTitle>Atlas ćwiczeń</PageTitle>
+
+
+<html>
+<body>
+
+<h2>Oto co możesz osiągnąć trzymając się planu</h2>
+<p>dodawaj ćwiczenia rozsądnie, dbaj o dietę i treningi a bramy niewyobrażalnej formy staną przed Tobą otworem</p>
+
+<img src="https://nafakcie.pl/wp-content/uploads/2022/09/zyzz-poza-min-1024x752.jpg" width="500" height="600">
+
+</body>
+</html>
+
+
+
+<a href="https://localhost:7265/TrainingScheulde">Check your TrainingScheulde</a>
+ 
+<div class="exercise-contener">
+    @foreach(var exercise in exercises)
+    {
+        <div class="exercise-item" >
+            <EditForm Model="@exercise" OnSubmit="HandleValidSubmit" >
+                <InputText @bind-Value="exercise.Name" />
+                <button type="submit">Zapisz</button>
+            </EditForm>
+            
+          <ol><li><p>@exercise.Name</p></li></ol>
+          <ul style="list-style-type:none;"><li><p>@exercise.Description</p></li></ul>
+        </div>
+    }        
+</div>
+
+
+
+
+@code 
+{
+    private List<ExerciseDto> exercises = new();
+   
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var taskExercise = FetchExerciseData();
+       
+    }
+
+    private async Task FetchExerciseData()
+    {
+        var client = new HttpClient();
+        var respArray = await client.GetFromJsonAsync<List<ExerciseDto>>("https://localhost:7060/Exercise");
+
+        if (respArray != null)
+        {
+            exercises = respArray;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void HandleValidSubmit(EditContext e)
+    {
+       var exerciseDto = e.Model as ExerciseDto;
+
+       var client = new HttpClient();
+
+       var response = await client.PostAsJsonAsync("https://localhost:7060/Exercise/", exerciseDto);
+
+    }
+
+
+
+   
+}

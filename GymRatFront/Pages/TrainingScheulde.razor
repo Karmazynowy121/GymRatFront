@@ -1,0 +1,54 @@
+﻿@page "/TrainingScheulde"
+@using GymRatApi.Dto
+
+<PageTitle>TrainingScheulde</PageTitle>
+
+
+
+
+<div class="trainingScheulde-contener">
+    <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
+       @foreach(var trainingScheulde in trainingScheuldes)
+       {
+          <option value="@trainingScheulde.Name">@trainingScheulde.Name</option>
+       }
+    </select>
+    <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
+</div>
+
+@code {
+    private List<TrainingScheuldeDto> trainingScheuldes = new();
+    private TrainingScheuldeDto selectedTrainingScheulde;
+
+    private void SelectChangeEvent(ChangeEventArgs e)
+    {
+        Console.WriteLine(e);
+        selectedTrainingScheulde = trainingScheuldes.FirstOrDefault(t => t.Name == e.Value.ToString());
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var taskTrainingScheulde = FetchTrainingScheuldeData();
+    }
+
+    private async Task FetchTrainingScheuldeData()
+    {
+        var client = new HttpClient();
+        var respArray = await client.GetFromJsonAsync<List<TrainingScheuldeDto>>("https://localhost:7060/TrainingScheulde");
+        if (respArray != null)
+        {
+            trainingScheuldes = respArray;
+            selectedTrainingScheulde = respArray.FirstOrDefault();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void HandleValidSubmit (object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingScheuldeDto = moduleObject.Model as TrainingScheuldeDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
+    }
+}
