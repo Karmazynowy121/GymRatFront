@@ -1,4 +1,5 @@
 ﻿@page "/AddTrainingScheulde"
+@using GymRatApi.Commands.TrainingScheuldeCommands
 @using GymRatApi.Dto
 
 <PageTitle>AddTrainingScheulde</PageTitle>
@@ -24,12 +25,15 @@
         {
             return; 
         }
-        trainingScheuldeDto.User = new UserTrainingScheuldeDto()
+
+        var createTrainingScheuldeCommand = new TrainingScheuldeCreateCommand()
         {
+            Name = trainingScheuldeDto.Name,
             UserId = 1
         };
+
         var client = new HttpClient();
-        var respone = await client.PutAsJsonAsync("https://localhost:7060/AddTrainingScheulde", trainingScheuldeDto);
+        var respone = await client.PutAsJsonAsync("https://localhost:7060/TrainingScheulde", createTrainingScheuldeCommand);
 
     } 
 }
