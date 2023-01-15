@@ -1,0 +1,3 @@
+[submodule "GymRatFront/ModuleData"]
+	path = GymRatFront/ModuleData
+	url = https://github.com/Karmazynowy121/GymRatModuleData.git

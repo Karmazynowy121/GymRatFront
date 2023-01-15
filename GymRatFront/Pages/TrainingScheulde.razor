@@ -16,6 +16,7 @@
     <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
 </div>
 
+
 @code {
     private List<TrainingScheuldeDto> trainingScheuldes = new();
     private TrainingScheuldeDto selectedTrainingScheulde;
@@ -50,5 +51,14 @@
         var client = new HttpClient();
 
         var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
+    }
+    private async void Create (object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingScheuldeDto = moduleObject.Model as TrainingPartDto;
+
+        var client = new HttpClient();
+        var respone = await client.PutAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
+
     }
 }

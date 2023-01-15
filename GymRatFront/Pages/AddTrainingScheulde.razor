@@ -1,0 +1,35 @@
+﻿@page "/AddTrainingScheulde"
+@using GymRatApi.Dto
+
+<PageTitle>AddTrainingScheulde</PageTitle>
+
+<div class="trainingScheulde-contener">
+    <div class="AddTrainingScheulde-item" >
+        <EditForm Model="@trainingScheulde" OnSubmit="Create" >
+            <InputText @bind-Value="trainingScheulde.Name" />
+            @*<InputText @bind-Value="trainingScheulde.Trainings" />*@
+            <button type="submit">Stwórz</button>
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+    private TrainingScheuldeDto trainingScheulde = new();
+
+    private async void Create (EditContext e)
+    {
+        var trainingScheuldeDto = e.Model as TrainingScheuldeDto;
+        if (trainingScheuldeDto is null)
+        {
+            return; 
+        }
+        trainingScheuldeDto.User = new UserTrainingScheuldeDto()
+        {
+            UserId = 1
+        };
+        var client = new HttpClient();
+        var respone = await client.PutAsJsonAsync("https://localhost:7060/AddTrainingScheulde", trainingScheuldeDto);
+
+    } 
+}

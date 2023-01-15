@@ -1,0 +1,16 @@
+﻿@using GymRatApi.Dto
+
+@if (Training != null)
+{
+    <div class="mt-5">
+        <h1>To jest nasz komponent bazorowy</h1>
+        <h3>@Training.Description</h3>
+        <h3>@Training.TrainingPart</h3>
+        <h3>@Training.TrainingDate</h3>
+    </div>
+}
+
+@code {
+        [Parameter]
+    public TrainingDto Training { get; set; }
+}
