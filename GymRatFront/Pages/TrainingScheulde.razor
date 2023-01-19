@@ -10,10 +10,16 @@
     <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
        @foreach(var trainingScheulde in trainingScheuldes)
        {
+
           <option value="@trainingScheulde.Name">@trainingScheulde.Name</option>
+          <EditForm Model="@trainingScheulde.Name" OnSubmit="HandleValidSubmit">
+                <InputText @bind-Value="trainingScheulde.Name" />
+                <button type="submit">Zapisz</button>
+                </EditForm>
        }
     </select>
     <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
+   
 </div>
 
 
@@ -52,13 +58,5 @@
 
         var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
     }
-    private async void Create (object e)
-    {
-        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
-        var trainingScheuldeDto = moduleObject.Model as TrainingPartDto;
 
-        var client = new HttpClient();
-        var respone = await client.PutAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
-
-    }
 }

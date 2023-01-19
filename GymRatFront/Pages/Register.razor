@@ -1,0 +1,43 @@
+﻿@page "/Register"
+@inject NavigationManager NavigationManager
+@using GymRatApi.Commands.UserCommands
+@using GymRatApi.Dto
+<h3>Register</h3>
+<div class="User rejestration">
+    <EditForm Model="@user" OnSubmit="Create">
+        <h3>Email</h3>
+        <InputText @bind-Value="user.Email" />
+        <h3>Name</h3>
+        <InputText @bind-Value="user.Name" />
+        <h3>Password</h3>
+        <InputText @bind-Value="user.Password" />
+        <button class="btn-link" @onclick="MoveMeToHome">Submit</button>
+    </EditForm>
+</div>
+@code 
+{
+    private UserDto user = new();
+
+    private async void Create(EditContext e)
+    {
+        var userDto = e.Model as UserDto;
+        if (userDto is null)
+        {
+            return;
+        }
+        var createUserCommand = new UserCreateCommand()
+            {
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password
+            };
+        var client = new HttpClient();
+        var respone = await client.PutAsJsonAsync("https://localhost:7060/User/", userDto);
+    }
+    void MoveMeToHome()
+    {
+        NavigationManager.NavigateTo("/Login");
+    }
+
+
+}

@@ -1,0 +1,24 @@
+﻿@page "/Login"
+@inject NavigationManager NavigationManager
+
+
+<html>
+<body>
+
+<h1>Login</h1>
+  <label for="Name">Name:</label>
+  <input type="text" id="name" name="name"><br><br>
+  <label for="Password">Password:</label>
+  <input type="text" id="password" name="password"><br><br>
+  <button class="btn-link" @onclick ="MoveMeToHome">Submit</button>
+
+
+</body>
+</html>
+
+@code {
+    void MoveMeToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

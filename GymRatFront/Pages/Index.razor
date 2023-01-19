@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using GymRatApi.Commands.UserCommands
 @using GymRatApi.Dto
 
 
@@ -7,6 +8,42 @@
 
 
 <PageTitle>Atlas ćwiczeń</PageTitle>
+<div id="header" style="height:45px;text-align: center;color:white;background-color:midnightblue;font-size:1.2rem;line-height:45px;">
+    Header
+</div>
+
+<SfSidebar Width="250px">
+    <ChildContent>
+        <div style="text-align: left;" class="text-content"> Sidebar </div>
+        <button type="button"
+        onclick=<a href="https://localhost:7265/Register">Register</a>
+        </button>
+        <button type="button"
+                onclick=<a href="https://localhost:7265/Login">Login</a>
+        </button>
+    </ChildContent>
+</SfSidebar>
+
+<div class="text-content" style="text-align: center;">Main content</div>
+
+<html>
+<body>
+<button type="button"
+onclick=<a href="https://localhost:7265/TrainingScheulde">TrainingSchedule</a>
+</button>
+
+<p id="demo"></p>
+
+</body>
+</html> 
+
+
+
+<style>
+    .control-container .e-btn.e-inherit {
+        margin: 0 3px;
+    }
+</style>
 
 
 <html>
@@ -22,7 +59,7 @@
 
 
 
-<a href="https://localhost:7265/TrainingScheulde">Check your TrainingScheulde</a>
+
  
 <div class="exercise-contener">
     @foreach(var exercise in exercises)
@@ -39,19 +76,35 @@
     }        
 </div>
 
+<style>
+    .e-sidebar {
+        background-color: #f8f8f8;
+        color: black;
+    }
+
+    .text-content {
+        font-size: 1.5rem;
+        padding: 3rem;
+    }
+
+    .main > div {
+        padding: 0px !important;
+    }
+</style>
+
 
 
 
 @code 
 {
     private List<ExerciseDto> exercises = new();
-   
+    private UserDto user = new();
 
 
     protected override async Task OnInitializedAsync()
     {
         var taskExercise = FetchExerciseData();
-       
+
     }
 
     private async Task FetchExerciseData()
@@ -68,14 +121,14 @@
 
     private async void HandleValidSubmit(EditContext e)
     {
-       var exerciseDto = e.Model as ExerciseDto;
+        var exerciseDto = e.Model as ExerciseDto;
 
-       var client = new HttpClient();
+        var client = new HttpClient();
 
-       var response = await client.PostAsJsonAsync("https://localhost:7060/Exercise/", exerciseDto);
+        var response = await client.PostAsJsonAsync("https://localhost:7060/Exercise/", exerciseDto);
 
     }
-
+   
 
 
    
