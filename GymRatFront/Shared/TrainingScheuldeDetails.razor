@@ -3,14 +3,41 @@
 @if (TrainingScheulde != null)
 {
     <div class="mt-5">
+        <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
+            <InputText @bind-Value="Training.Description" />
+            <button type="submit">Edytuj</button>
+        </EditForm>
         <h1>To jest nasz komponent bazorowy</h1>
         <h3>@TrainingScheulde.Name</h3>
                 
     </div>
+
+    @foreach (var training in TrainingScheulde.Trainings)
+    {
+        <TrainingDetails Training="@training"/>   
+    }
+    
 }
 
-@code {
+
+@code 
+{
 
     [Parameter]
     public TrainingScheuldeDto TrainingScheulde { get; set; }
+    [Parameter]
+    public TrainingDto Training { get; set; }
+    [Parameter]
+    public TrainingPartDto TrainingPart { get; set; }
+
+
+    private async void HandleValidSubmit(object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingScheuldeDto = moduleObject.Model as TrainingScheuldeDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
+    }
 }

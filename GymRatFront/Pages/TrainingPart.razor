@@ -1,0 +1,37 @@
+﻿@page "/TrainingPart"
+@using GymRatApi.Dto
+
+<PageTitle>TrainingPart</PageTitle>
+
+
+
+@code 
+{
+    private List<TrainingPartDto> trainingParts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var taskTrainingPart = FetchTrainingPartData();
+    }
+    private async Task FetchTrainingPartData()
+    {
+        var client = new HttpClient();
+        var respArray = await client.GetFromJsonAsync<List<TrainingPartDto>>("https://localhost:7060/TrainingPart");
+        if (respArray != null)
+        {
+            trainingParts = respArray;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async void HandleValidSubmit(object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingPartDto = moduleObject.Model as TrainingPartDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingsPart/", trainingPartDto);
+
+    }
+}

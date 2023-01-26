@@ -11,7 +11,7 @@
         <InputText @bind-Value="user.Name" />
         <h3>Password</h3>
         <InputText @bind-Value="user.Password" />
-        <button class="btn-link" @onclick="MoveMeToHome">Submit</button>
+        <button class="btn-link">Submit</button>
     </EditForm>
 </div>
 @code 
@@ -33,11 +33,13 @@
             };
         var client = new HttpClient();
         var respone = await client.PutAsJsonAsync("https://localhost:7060/User/", userDto);
+
+        if (respone.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/Login");
+        }
     }
-    void MoveMeToHome()
-    {
-        NavigationManager.NavigateTo("/Login");
-    }
+
 
 
 }

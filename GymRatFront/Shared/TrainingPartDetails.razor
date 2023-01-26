@@ -1,0 +1,10 @@
+﻿@using GymRatApi.Dto
+<h3>Ćwiczenia</h3>
+<p>@TrainingPart.BreakBetweenSeries</p>
+<p>@TrainingPart.AmountSeries</p>
+<p>@TrainingPart.Reps</p>
+<p>@TrainingPart.BodyWeight</p>
+@code {
+    [Parameter]
+    public TrainingPartDto TrainingPart { get; set; }
+}

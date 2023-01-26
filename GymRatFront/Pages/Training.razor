@@ -8,11 +8,13 @@
     <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
     @foreach(var training in trainings)
     {
-       <option value="@training.Description">@training.Description</option> 
+      <option value="@training.Description">@training.Description</option>
     }
     </select>
-    <TrainingDetails Training="@selectedTraining" />
+    <TrainingsEditForm Training="@selectedTraining" />
 </div>
+
+
 
 @code 
 {

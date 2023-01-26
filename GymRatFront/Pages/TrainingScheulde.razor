@@ -12,14 +12,14 @@
        {
 
           <option value="@trainingScheulde.Name">@trainingScheulde.Name</option>
-          <EditForm Model="@trainingScheulde.Name" OnSubmit="HandleValidSubmit">
+         @* <EditForm Model="@trainingScheulde.Name" OnSubmit="HandleValidSubmit">
                 <InputText @bind-Value="trainingScheulde.Name" />
                 <button type="submit">Zapisz</button>
-                </EditForm>
+                </EditForm>*@
        }
     </select>
     <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
-   
+    
 </div>
 
 
@@ -47,16 +47,6 @@
             selectedTrainingScheulde = respArray.FirstOrDefault();
             InvokeAsync(StateHasChanged);
         }
-    }
-
-    private async void HandleValidSubmit (object e)
-    {
-        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
-        var trainingScheuldeDto = moduleObject.Model as TrainingScheuldeDto;
-
-        var client = new HttpClient();
-
-        var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
     }
 
 }
