@@ -6,18 +6,26 @@
 
 
 
-<div class="trainingScheulde-contener">
-    <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
-       @foreach(var trainingScheulde in trainingScheuldes)
-       {
+<div class="training-scheulde-contener">
+    <div class="page-header">
+        <div class="page-header-informations">
+            <h2>Harmonogram treiningowy</h2>
+            <span>Przeglądaj lub edytuj swoje harmonogramy treningowe</span>
+        </div>
+    </div>
 
-          <option value="@trainingScheulde.Name">@trainingScheulde.Name</option>
-         @* <EditForm Model="@trainingScheulde.Name" OnSubmit="HandleValidSubmit">
-                <InputText @bind-Value="trainingScheulde.Name" />
-                <button type="submit">Zapisz</button>
-                </EditForm>*@
-       }
-    </select>
+    <div class="input-group training-scheulde-select-container">
+        <label class="training-scheulde-label">Wyberz harmonogram z listy</label>
+        <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
+           @foreach(var trainingScheulde in trainingScheuldes)
+           {
+              <option value="@trainingScheulde.Name">@trainingScheulde.Name</option>
+           }
+        </select>
+    </div>
+
+
+
     <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
     
 </div>

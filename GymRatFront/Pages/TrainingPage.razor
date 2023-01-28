@@ -1,0 +1,24 @@
+﻿@page "/trainingpage/{Id}"
+@using GymRatApi.Dto;
+
+<p>@Id</p>
+<p>@trainingData?.Description</p>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+
+    private TrainingDto trainingData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trainingData = await FetchTrainingData();
+    }
+
+    private async Task<TrainingDto> FetchTrainingData()
+    {
+        var client = new HttpClient();
+        return await client.GetFromJsonAsync<TrainingDto>($"https://localhost:7060/training/{Id}");
+    }
+}

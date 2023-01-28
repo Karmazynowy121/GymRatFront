@@ -9,14 +9,10 @@
     @if (Training.TrainingPart is not null)
     {
 
-        @foreach (var tp in Training.TrainingPart)
+        @foreach (var trainingPart in Training.TrainingPart)
         {
-
-           <p>@tp.AmountSeries</p>
-           <p>@tp.BodyWeight</p>
-           <p>@tp.BreakBetweenSeries</p>
-           <p>@tp.Reps</p>
-           <p>@tp.ExerciseId</p>
+            <TrainingPartDetails TrainingPart="@trainingPart" />
+           
         }
     }
 }

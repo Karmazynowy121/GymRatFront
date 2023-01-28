@@ -1,24 +1,32 @@
 ﻿@page "/Login"
+@using GymRatApi.Dto;
+@using GymRatApi.ModuleData.Dto;
 @inject NavigationManager NavigationManager
 
-
-<html>
-<body>
-
 <h1>Login</h1>
-  <label for="Name">Name:</label>
-  <input type="text" id="name" name="name"><br><br>
-  <label for="Password">Password:</label>
-  <input type="text" id="password" name="password"><br><br>
-  <button class="btn-link" @onclick ="MoveMeToHome">Submit</button>
-
-
-</body>
-</html>
+    <div class="User Login">
+        <EditForm Model="@user" OnSubmit="Loggin">
+            <h3>Name</h3>
+            <InputText @bind-Value="user.Name" />
+            <h3>Password</h3>
+            <InputText @bind-Value="user.Password" />
+            <button class="btn-link">Submit</button>
+        </EditForm>
+    </div>
 
 @code {
-    void MoveMeToHome()
+    private LoggedUserDto user = new();
+
+    private async void Loggin (EditContext e)
     {
-        NavigationManager.NavigateTo("/");
+        var userDto = e.Model as LoggedUserDto;
+        var client = new HttpClient();
+        var respone = await client.PostAsJsonAsync("https://localhost:7060/User/login/", userDto);
+
+        if (respone.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
     }
 }

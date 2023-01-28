@@ -1,23 +1,35 @@
-﻿@using GymRatApi.Dto
+﻿@using GymRatApi.Commands.TrainingCommands;
+@using GymRatApi.Dto
 
-@if (TrainingScheulde != null)
-{
-    <div class="mt-5">
-        <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
-            <InputText @bind-Value="Training.Description" />
-            <button type="submit">Edytuj</button>
-        </EditForm>
-        <h1>To jest nasz komponent bazorowy</h1>
-        <h3>@TrainingScheulde.Name</h3>
-                
-    </div>
-
-    @foreach (var training in TrainingScheulde.Trainings)
+<div class="training-scheulde-details">
+    @if (TrainingScheulde != null)
     {
-        <TrainingDetails Training="@training"/>   
+        <div class="input-group">
+            <EditForm Model="@TrainingScheulde" OnSubmit="HandleValidSubmit">
+                <InputText @bind-Value="TrainingScheulde.Name" />
+                <button class="btn btn-primary" type="submit">Edytuj</button>
+            </EditForm>
+        </div>
+
+        <div class="input-group create-training-container">
+            <div class="create-training-header">
+                <h3>Treningi</h3>
+                <span>Kliknij treining albo dodaj nowy</span>
+            </div>
+            <EditForm Model="@training" OnSubmit="TrainingCreateHandler">
+                <InputText @bind-Value="@training.Description" />
+                <button class="btn btn-primary">Dodaj nowy trainig</button>
+            </EditForm>
+        </div>
+        @foreach (var training in TrainingScheulde.Trainings)
+        {
+            <div class="trainings-container">
+                <a class="training-link-item" target="_self" href="/trainingpage/@training.Id">@training.Description</a>
+            </div>
+        }
     }
-    
-}
+</div>
+
 
 
 @code 
@@ -25,10 +37,8 @@
 
     [Parameter]
     public TrainingScheuldeDto TrainingScheulde { get; set; }
-    [Parameter]
-    public TrainingDto Training { get; set; }
-    [Parameter]
-    public TrainingPartDto TrainingPart { get; set; }
+
+    public TrainingDto training = new();
 
 
     private async void HandleValidSubmit(object e)
@@ -39,5 +49,34 @@
         var client = new HttpClient();
 
         var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingScheulde", trainingScheuldeDto);
+    }
+
+    public async Task TrainingCreateHandler(EditContext e)
+    {
+        var newTrainig = e.Model as TrainingDto;
+
+        if (newTrainig == null)
+        {
+            Console.WriteLine("Nie można dodawac niczego ");
+            return;
+        }
+
+        var newCommandTraining = new TrainingCreateCommand()
+        {
+            Description = newTrainig.Description,
+            TrainingScheudleId = TrainingScheulde.Id
+        };
+
+        using var client = new HttpClient();
+        var res = await client.PutAsJsonAsync("https://localhost:7060/training", newCommandTraining);
+        if (res.IsSuccessStatusCode)
+        {
+            var resTraining = await res.Content.ReadFromJsonAsync<TrainingDto>();
+            if (resTraining != null)
+            {
+                TrainingScheulde.Trainings.Add(resTraining);
+                InvokeAsync(StateHasChanged);
+            }
+        }
     }
 }
