@@ -1,0 +1,36 @@
+﻿@using GymRatFront.Providers; 
+@using GymRatFront.ClientService;
+
+@inject IAuthenticationService authenticationService
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="top-row px-4">
+            <a href="/">Home</a>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a href="https://localhost:7265/Register">Register</a>
+            <a href="https://localhost:7265/Login">Login</a>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <div class="top-row px-4">
+            <a href="/">Home</a>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a href="https://localhost:7265/TrainingScheulde">TrainingSchedule</a>
+            <a href="#" @onclick="@(() => {authenticationService.LogoutUser();})">Logout</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    protected async override Task OnParametersSetAsync()
+    {
+        //UserService.LogdChanged += LogedChangedEvent;
+    }
+
+    public void LogedChangedEvent(object? sender, bool isLoged)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}

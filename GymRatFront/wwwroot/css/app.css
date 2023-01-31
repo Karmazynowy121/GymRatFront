@@ -1,0 +1,32 @@
+﻿.page-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.page-header span {
+    font-style: italic;
+    color: #333;
+}
+
+.training-scheulde-select-container {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+
+    margin-bottom: 2rem;
+}
+
+.training-scheulde-select-container label {
+    margin-bottom: .5rem;
+}
+
+    .training-scheulde-select-container .form-select {
+        width: 100%;
+    }
+
+.training-scheulde-select-container,
+.training-scheulde-details {
+}
+
+.training-scheulde-details input {
+}

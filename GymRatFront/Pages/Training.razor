@@ -1,38 +1,59 @@
 ﻿@page "/Training"
+@using GymRatApi.Commands.TrainingCommands;
 @using GymRatApi.Dto
 
 <PageTitle>Training</PageTitle>
 
 
 <div class="training-contener">
+    <select class="form-select" aria-label="Default select example" @onchange="SelectChangeEvent">
     @foreach(var training in trainings)
     {
-        <div class="training-item" >
-            <EditForm Model="@training" >
-                <InputText @bind-Value="training.Description" />
-                <button type="submit">Zapisz</button>
-            </EditForm>
-            <p>@training.Description</p>
-        </div>
-    }        
+      <option value="@training.Description">@training.Description</option>
+    }
+    </select>
+    <TrainingsEditForm Training="@selectedTraining" />
 </div>
+
+<div class="trainingcreate-contener">
+    <div class="AddTraining-item" >
+        <EditForm Model="@training" OnSubmit="Create" >
+            <InputText @bind-Value="training.Description" />
+            <InputNumber @bind-Value="training.TrainingDuration" />
+            <InputNumber @bind-Value="training.Interval" />
+            <InputDate @bind-Value="training.TrainingDate" />
+            <button type="submit">Stwórz</button>
+        </EditForm>
+    </div>
+</div>
+
+
 
 @code 
 {
+    private TrainingDto training = new();
+    private TrainingDto selectedTraining;
     private List<TrainingDto> trainings = new();
+
+    private void SelectChangeEvent(ChangeEventArgs e)
+    {
+        Console.WriteLine(e);
+        selectedTraining = trainings.FirstOrDefault(t => t.Description == e.Value.ToString());
+    }
 
     protected override async Task OnInitializedAsync()
     {
-         var taskTraining = FetchTrainigData();
+        var taskTraining = FetchTrainigData();
     }
 
-private async Task FetchTrainigData()
+    private async Task FetchTrainigData()
     {
         var client = new HttpClient();
         var respArray = await client.GetFromJsonAsync<List<TrainingDto>>("https://localhost:7060/Training");
         if (respArray != null)
         {
             trainings = respArray;
+            selectedTraining = respArray.FirstOrDefault();
             InvokeAsync(StateHasChanged);
         }
     }
@@ -45,6 +66,26 @@ private async Task FetchTrainigData()
        var client = new HttpClient();
 
        var response = await client.PostAsJsonAsync("https://localhost:7060/Trainings/", trainingDto);
+
+    }
+    private async void Create(EditContext e)
+    {
+        var trainingDto = e.Model as TrainingDto;
+        if (trainingDto is null)
+        {
+            return;
+        }
+
+        var trainingCreateCommand = new TrainingCreateCommand()
+            {
+                Description = trainingDto.Description,
+                TrainingDate = trainingDto.TrainingDate,
+                TrainingDuration = trainingDto.TrainingDuration,
+                Interval = trainingDto.Interval
+            };
+
+        var client = new HttpClient();
+        var respone = await client.PutAsJsonAsync("https://localhost:7060/Training", trainingCreateCommand);
 
     }
 }

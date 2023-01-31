@@ -1,0 +1,25 @@
+﻿@using GymRatApi.Dto
+<h3>Ćwiczenia</h3>
+<EditForm Model="@TrainingPart" OnSubmit="HandleValidSubmit">
+    <InputNumber @bind-Value="TrainingPart.BreakBetweenSeries" />
+    <InputNumber @bind-Value="TrainingPart.AmountSeries" />
+    <InputNumber @bind-Value="TrainingPart.Reps" />
+    <InputNumber @bind-Value="TrainingPart.BodyWeight" />
+    <button type="submit">Edytuj</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public TrainingPartDto TrainingPart { get; set; }
+
+    private async void HandleValidSubmit(object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingPartDto = moduleObject.Model as TrainingPartDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync("https://localhost:7060/TrainingPart/", trainingPartDto);
+
+    }
+}

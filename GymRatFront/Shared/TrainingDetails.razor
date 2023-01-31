@@ -1,0 +1,29 @@
+﻿@using GymRatApi.Dto
+
+@if (Training != null)
+{
+    <div class="mt-5">
+        <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
+            <InputText @bind-Value="Training.Description" />
+            <InputDate @bind-Value="Training.TrainingDate" />
+            <InputNumber @bind-Value="Training.TrainingDuration" />
+            <InputNumber @bind-Value="Training.Interval" />
+            <button type="submit">Edytuj</button>
+        </EditForm>
+    </div>
+}
+
+@code {
+        [Parameter]
+    public TrainingDto Training { get; set; }
+
+    private async void HandleValidSubmit(object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingDto = moduleObject.Model as TrainingDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync("https://localhost:7060/Training", trainingDto);
+    }
+}

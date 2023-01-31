@@ -1,19 +1,40 @@
-﻿@inherits LayoutComponentBase
+﻿@using GymRatFront.Providers;
+@inherits LayoutComponentBase
+
+
+
 
 <PageTitle>GymRatFront</PageTitle>
+ 
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
+    <AuthorizeView>
+        <Authorized>
+            <div class="sidebar">
+                 <NavMenu />
+            </div>
+        </Authorized>
+    </AuthorizeView>
+   
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
+    <div class="top-row page-navigator">
+        <PageNavigator />
+    </div>
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
+
+
+@code {
+    protected async override Task OnParametersSetAsync()
+    {
+        //UserService.LogdChanged += LogedChangedEvent;
+    }
+
+    public void LogedChangedEvent(object? sender, bool isLoged)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}

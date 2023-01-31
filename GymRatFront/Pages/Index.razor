@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using GymRatApi.Commands.UserCommands
 @using GymRatApi.Dto
 
 
@@ -7,6 +8,13 @@
 
 
 <PageTitle>Atlas ćwiczeń</PageTitle>
+
+
+
+
+
+
+
 
 
 <html>
@@ -22,7 +30,7 @@
 
 
 
-<a href="https://localhost:7265/TrainingScheulde">Check your TrainingScheulde</a>
+
  
 <div class="exercise-contener">
     @foreach(var exercise in exercises)
@@ -39,19 +47,35 @@
     }        
 </div>
 
+<style>
+    .e-sidebar {
+        background-color: #f8f8f8;
+        color: black;
+    }
+
+    .text-content {
+        font-size: 1.5rem;
+        padding: 3rem;
+    }
+
+    .main > div {
+        padding: 0px !important;
+    }
+</style>
+
 
 
 
 @code 
 {
     private List<ExerciseDto> exercises = new();
-   
+    private UserDto user = new();
 
 
     protected override async Task OnInitializedAsync()
     {
         var taskExercise = FetchExerciseData();
-       
+
     }
 
     private async Task FetchExerciseData()
@@ -68,14 +92,14 @@
 
     private async void HandleValidSubmit(EditContext e)
     {
-       var exerciseDto = e.Model as ExerciseDto;
+        var exerciseDto = e.Model as ExerciseDto;
 
-       var client = new HttpClient();
+        var client = new HttpClient();
 
-       var response = await client.PostAsJsonAsync("https://localhost:7060/Exercise/", exerciseDto);
+        var response = await client.PostAsJsonAsync("https://localhost:7060/Exercise/", exerciseDto);
 
     }
-
+   
 
 
    

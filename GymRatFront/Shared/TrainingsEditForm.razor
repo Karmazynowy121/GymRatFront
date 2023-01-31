@@ -1,0 +1,27 @@
+﻿@using GymRatApi.Dto
+
+<h3>Opis treningu</h3>
+@if (Training != null)
+{
+    <p>@Training.Description</p>
+    <p>@Training.TrainingDuration</p>
+    <p>@Training.TrainingDate</p>
+    @if (Training.TrainingPart is not null)
+    {
+
+        @foreach (var trainingPart in Training.TrainingPart)
+        {
+            <TrainingPartDetails TrainingPart="@trainingPart" />
+           
+        }
+    }
+}
+
+
+
+
+
+@code {
+    [Parameter]
+    public TrainingDto Training { get; set; }
+}

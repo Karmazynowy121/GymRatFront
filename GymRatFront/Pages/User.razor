@@ -19,7 +19,7 @@
             <p>@userDetails.CreateAt</p>
         </div>
     }        
-</div>
+</div> 
 @code {
     private UserDto userDetails;
     //private EditContext editContext;
@@ -57,6 +57,6 @@
        var client = new HttpClient();
 
        var response = await client.PostAsJsonAsync("https://localhost:7060/User/", userDto);
-
+        
     }
 }

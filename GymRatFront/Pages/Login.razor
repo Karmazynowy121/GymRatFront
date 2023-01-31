@@ -1,0 +1,41 @@
+﻿@page "/Login"
+@using GymRatFront.ClientService;
+@using GymRatFront.Providers;
+@using GymRatApi.Dto;
+@using GymRatApi.ModuleData.Dto;
+@using GymRatFront.Providers;
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService authenticationService
+
+
+<h1>Login</h1>
+    <div class="User Login">
+        <EditForm Model="@user" OnSubmit="Loggin">
+            <h3>Name</h3>
+            <InputText @bind-Value="user.Name" />
+            <h3>Password</h3>
+            <InputText @bind-Value="user.Password" />
+            <button class="btn-link">Submit</button>
+        </EditForm>
+    </div>
+
+@code {
+    private LoggedUserDto user = new();
+    private async void Loggin (EditContext e)
+    {
+        var userDto = e.Model as LoggedUserDto;
+        var client = new HttpClient();
+        var respone = await client.PostAsJsonAsync("https://localhost:7060/User/login/", userDto);
+
+        if (respone.IsSuccessStatusCode)
+        {
+            var loggedUser = await respone.Content.ReadFromJsonAsync<LoggedUserDto>();
+            if (loggedUser != null)
+            {
+                authenticationService.LogIn(loggedUser);
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        
+    }
+}
