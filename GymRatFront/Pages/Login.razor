@@ -1,7 +1,12 @@
 ﻿@page "/Login"
+@using GymRatFront.ClientService;
+@using GymRatFront.Providers;
 @using GymRatApi.Dto;
 @using GymRatApi.ModuleData.Dto;
+@using GymRatFront.Providers;
 @inject NavigationManager NavigationManager
+@inject IAuthenticationService authenticationService
+
 
 <h1>Login</h1>
     <div class="User Login">
@@ -16,7 +21,6 @@
 
 @code {
     private LoggedUserDto user = new();
-
     private async void Loggin (EditContext e)
     {
         var userDto = e.Model as LoggedUserDto;
@@ -25,7 +29,12 @@
 
         if (respone.IsSuccessStatusCode)
         {
-            NavigationManager.NavigateTo("/");
+            var loggedUser = await respone.Content.ReadFromJsonAsync<LoggedUserDto>();
+            if (loggedUser != null)
+            {
+                authenticationService.LogIn(loggedUser);
+                NavigationManager.NavigateTo("/");
+            }
         }
         
     }

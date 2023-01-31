@@ -1,6 +1,8 @@
 ﻿@page "/TrainingScheulde"
 @using GymRatApi.Dto
 
+@attribute [Authorize]
+
 <PageTitle>TrainingScheulde</PageTitle>
 
 
@@ -29,7 +31,7 @@
     <TrainingScheuldeDetails TrainingScheulde="@selectedTrainingScheulde" />
     
 </div>
-
+>
 
 @code {
     private List<TrainingScheuldeDto> trainingScheuldes = new();

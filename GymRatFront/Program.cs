@@ -1,6 +1,8 @@
-using GymRatFront.ClientServices;
+using GymRatFront.ClientService;
 using GymRatFront.Data;
+using GymRatFront.Providers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 
 
@@ -9,8 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<UserLogService>(o => 
-new UserLogService() { IsLogIn = true }); 
+builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, GymRatAuthenticationProvider>();
 
 
 var app = builder.Build();

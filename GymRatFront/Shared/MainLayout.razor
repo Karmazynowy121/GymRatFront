@@ -1,6 +1,6 @@
-﻿@using GymRatFront.ClientServices;
+﻿@using GymRatFront.Providers;
 @inherits LayoutComponentBase
-@inject UserLogService UserService;
+
 
 
 
@@ -8,13 +8,14 @@
  
 
 <div class="page">
-    @if (UserService.IsLogIn)// jeżeli nie ma użytkownika to sidebar nie będziesz się wyświetlał
-    {
-     <div class="sidebar">
-         <NavMenu />
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <div class="sidebar">
+                 <NavMenu />
+            </div>
+        </Authorized>
+    </AuthorizeView>
    
-    }
     <main>
     <div class="top-row page-navigator">
         <PageNavigator />
@@ -24,3 +25,16 @@
         </article>
     </main>
 </div>
+
+
+@code {
+    protected async override Task OnParametersSetAsync()
+    {
+        //UserService.LogdChanged += LogedChangedEvent;
+    }
+
+    public void LogedChangedEvent(object? sender, bool isLoged)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}
