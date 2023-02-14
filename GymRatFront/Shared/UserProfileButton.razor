@@ -1,0 +1,59 @@
+@using GymRatApi.Dto;
+@using GymRatFront.ClientService;
+@inject IAuthenticationService authenticationService
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle " @onclick="@(ToggleDropDownMenu)" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+    </button>
+    <div class="dropdown-menu @_toggle">
+        <div class="user-informations">
+            <div class="user-image">
+                <img />
+            </div>
+            <div>
+                <h3>@authenticationService.User?.Name</h3>
+                <span>@authenticationService.User?.Email</span>
+                <a href="https://localhost:7265/User/@authenticationService.User?.Id">Zobacz swój profil</a>"
+            </div>
+        </div>
+        <div class="buttons-section">
+            <button type="button" onclick="@(() => Console.WriteLine("profil dude"))">Profil</button>
+            <button type="button" @onclick="@(() => {authenticationService?.LogoutUser();})">Logout</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private UserDto userDetails;
+    private string _toggle = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await FetchUserData();
+    }
+
+    private async Task FetchUserData()
+    {
+        var client = new HttpClient();
+        var respuser = await client.GetFromJsonAsync<UserDto>("https://localhost:7060/User/1");
+        if (respuser != null)
+        {
+            userDetails = respuser;
+        }
+    }
+
+    private void ToggleDropDownMenu()
+    {
+        if (string.IsNullOrEmpty(_toggle))
+        {
+            _toggle = "display-block";
+        }
+        else
+        {
+            _toggle = string.Empty;
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+
+}

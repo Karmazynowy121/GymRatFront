@@ -16,7 +16,7 @@ namespace GymRatFront.Providers
 
             this.authenticationService.LogdChanged += AuthenticationService_LogdChanged;
         }
-
+      
         private void AuthenticationService_LogdChanged(object? sender, LoggedUserDto e)
         {
             List<Claim> claims = null;

@@ -1,4 +1,4 @@
-﻿@page "/User"
+﻿@page "/User/{UserID}"
 @using GymRatApi.Dto
 <PageTitle>User</PageTitle>
 <h2>Witaj na swoim panelu użytkowniku, poczuj się jak na własnej siłowni </h2>
@@ -10,17 +10,16 @@
     {
         <div class="user-item" >
             <EditForm Model="@userDetails" OnSubmit="HandleValidSubmit">
-                <InputText @bind-Value="userDetails.Name" />
-                <InputText @bind-Value="userDetails.Email" />
+              <p>Nazwa</p> <InputText @bind-Value="userDetails.Name" />
+              <p>Email</p>  <InputText @bind-Value="userDetails.Email" />
                 <button type="submit">Zapisz</button>
             </EditForm>
-            <p>@userDetails.Name</p>
-            <p>@userDetails.Email</p>
-            <p>@userDetails.CreateAt</p>
+            <p>Jesteś z nami od @userDetails.CreateAt</p>
         </div>
     }        
 </div> 
 @code {
+    [Parameter] public string UserID { get; set; }
     private UserDto userDetails;
     //private EditContext editContext;
     private bool isChanged;
@@ -39,7 +38,7 @@
     private async Task FetchUserData()
     {
         var client = new HttpClient();
-        var respuser = await client.GetFromJsonAsync<UserDto>("https://localhost:7060/User/1");
+        var respuser = await client.GetFromJsonAsync<UserDto>($"https://localhost:7060/User/{UserID}");
         if (respuser != null)
         {
             userDetails = respuser;

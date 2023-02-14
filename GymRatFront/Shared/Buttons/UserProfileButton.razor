@@ -1,0 +1,45 @@
+﻿@using GymRatApi.Dto;
+@using GymRatFront.ClientService;
+@inject IAuthenticationService authenticationService
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Dropdown
+    </button>
+    <div class="dropdown-menu">
+        <div class="user-informations">
+            <div class="user-image">
+                <img src="clayworm.jpg">
+            </div>
+            <div>
+                <h3>@userDetails.Name</h3>
+                <span>@userDetails.Email</span>
+                <a href="https://localhost:7265/User/">Zobacz swój profil</a>"
+            </div>
+        </div>
+        <div class="buttons-section">
+            <button type="button" onclick="@(() => Console.WriteLine("profil dude"))">Profil</button>
+            <button type="button" @onclick="@(() => {authenticationService.LogoutUser();})">Logout</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] 
+    public string UserID { get; set; }
+    private UserDto userDetails;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await FetchUserData();
+    }
+
+    private async Task FetchUserData()
+    {
+        var client = new HttpClient();
+        var respuser = await client.GetFromJsonAsync<UserDto>($"https://localhost:7060/User/{UserID}");
+        if (respuser != null)
+        {
+            userDetails = respuser;
+        }
+    }
+}

@@ -1,6 +1,5 @@
 ﻿@using GymRatFront.Providers; 
 @using GymRatFront.ClientService;
-
 @inject IAuthenticationService authenticationService
 
 <AuthorizeView>
@@ -18,11 +17,10 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
             <a href="https://localhost:7265/TrainingScheulde">TrainingSchedule</a>
             <a href="#" @onclick="@(() => {authenticationService.LogoutUser();})">Logout</a>
+            <GymRatFront.Shared.UserProfileButton />
         </div>
     </Authorized>
 </AuthorizeView>
-
-
 @code {
     protected async override Task OnParametersSetAsync()
     {

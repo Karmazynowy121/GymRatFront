@@ -1,24 +1,43 @@
 ﻿@page "/trainingpage/{Id}"
 @using GymRatApi.Dto;
 
-<p>@Id</p>
-<p>@trainingData?.Description</p>
+<div class="training-edit">
 
+    <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
+        <InputNumber @bind-Value="Training.Id" />
+        <InputText @bind-Value="Training.Description" />
+        <InputDate @bind-Value="Training.TrainingDate" />
+        <InputNumber @bind-Value="Training.TrainingDuration" />
+        <InputNumber @bind-Value="Training.Interval" />
+        <button type="submit">Edytuj</button>
+    </EditForm>
+</div>
 @code {
 
     [Parameter]
     public string Id { get; set; }
+    [Parameter]
+    public TrainingDto Training { get; set; }
 
-    private TrainingDto trainingData;
+    //private TrainingDto trainingData;
 
     protected override async Task OnInitializedAsync()
     {
-        trainingData = await FetchTrainingData();
+        Training = await FetchTrainingData();
     }
 
     private async Task<TrainingDto> FetchTrainingData()
     {
         var client = new HttpClient();
         return await client.GetFromJsonAsync<TrainingDto>($"https://localhost:7060/training/{Id}");
+    }
+    private async void HandleValidSubmit(object e)
+    {
+        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
+        var trainingDto = moduleObject.Model as TrainingDto;
+
+        var client = new HttpClient();
+
+        var response = await client.PostAsJsonAsync<TrainingDto>($"https://localhost:7060/training/{Id}", trainingDto);
     }
 }

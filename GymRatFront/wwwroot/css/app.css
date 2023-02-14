@@ -30,3 +30,17 @@
 
 .training-scheulde-details input {
 }
+
+.dropdown-menu.display-block {
+    display: block;
+    right :0;
+}
+.btn.btn-secondary.dropdown-toggle {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+}
+.top-row.px-4 {
+    display: flex;
+    gap: 1rem;
+}

@@ -6,4 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Shared\Buttons\UserProfileButton.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Buttons\UserProfileButton.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Shared\Buttons\UserProfileButton.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\Buttons\UserProfileButton.razor" />
+  </ItemGroup>
+
 </Project>
