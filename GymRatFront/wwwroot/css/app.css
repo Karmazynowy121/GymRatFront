@@ -44,3 +44,15 @@
     display: flex;
     gap: 1rem;
 }
+.user-informations style {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+.user-image {
+    background-image: url('../images/kotek.jpg');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}

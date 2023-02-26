@@ -1,17 +1,20 @@
-﻿@page "/User/{UserID}"
+﻿@page "/User/"
 @using GymRatApi.Dto
+@using GymRatFront.ClientService;
+@inject IAuthenticationService authenticationService
 <PageTitle>User</PageTitle>
 <h2>Witaj na swoim panelu użytkowniku, poczuj się jak na własnej siłowni </h2>
 
 
 
 <div class="user-contener">
-    @if (userDetails != null)
+    @if (editContext != null)
     {
         <div class="user-item" >
-            <EditForm Model="@userDetails" OnSubmit="HandleValidSubmit">
-              <p>Nazwa</p> <InputText @bind-Value="userDetails.Name" />
-              <p>Email</p>  <InputText @bind-Value="userDetails.Email" />
+            <EditForm EditContext="@editContext" OnSubmit="HandleValidSubmit">
+                <p>Nazwa</p> <InputText @bind-Value="userDetails.Name" />
+                <p>Email</p>  <InputText @bind-Value="userDetails.Email" />
+                <p>Hasło</p> <InputText type="password" @bind-Value="userDetails.Password" />
                 <button type="submit">Zapisz</button>
             </EditForm>
             <p>Jesteś z nami od @userDetails.CreateAt</p>
@@ -21,12 +24,13 @@
 @code {
     [Parameter] public string UserID { get; set; }
     private UserDto userDetails;
-    //private EditContext editContext;
+    private int? userId;
+    private EditContext editContext;
     private bool isChanged;
     protected override async Task OnInitializedAsync()
     {
-       // editContext = new EditContext(userDetails);
-       // editContext.OnFieldChanged += EditContext_OnFieldChanged;
+        userId = authenticationService.User?.Id;
+        
         await FetchUserData();
     }
 
@@ -37,25 +41,30 @@
 
     private async Task FetchUserData()
     {
-        var client = new HttpClient();
-        var respuser = await client.GetFromJsonAsync<UserDto>($"https://localhost:7060/User/{UserID}");
-        if (respuser != null)
+        if (userId != null)
         {
-            userDetails = respuser;
+            var client = new HttpClient();
+            var respuser = await client.GetFromJsonAsync<UserDto>($"https://localhost:7060/User/{userId}");
+
+            if (respuser != null)
+            {
+                userDetails = respuser;
+                editContext = new EditContext(userDetails);
+                editContext.OnFieldChanged += EditContext_OnFieldChanged;
+            }
         }
     }
-    private async void HandleValidSubmit(object e)
+    private async void HandleValidSubmit(EditContext e)
     {
-        if (isChanged == false)
+        if (!isChanged || userId == null)
         {
             return ;
         }
-       var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
-       var userDto = moduleObject.Model as UserDto;
+       var userDto = e.Model as UserDto;
 
        var client = new HttpClient();
 
-       var response = await client.PostAsJsonAsync("https://localhost:7060/User/", userDto);
+        var response = await client.PostAsJsonAsync($"https://localhost:7060/User/", userDto);
         
     }
 }

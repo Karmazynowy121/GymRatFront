@@ -1,9 +1,9 @@
-@using GymRatApi.Dto;
+﻿@using GymRatApi.Dto;
 @using GymRatFront.ClientService;
 @inject IAuthenticationService authenticationService
+@inject NavigationManager NavigationManager
 <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle " @onclick="@(ToggleDropDownMenu)" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-
     </button>
     <div class="dropdown-menu @_toggle">
         <div class="user-informations">
@@ -13,11 +13,11 @@
             <div>
                 <h3>@authenticationService.User?.Name</h3>
                 <span>@authenticationService.User?.Email</span>
-                <a href="https://localhost:7265/User/@authenticationService.User?.Id">Zobacz sw�j profil</a>"
+                <a href="https://localhost:7265/User/">Zobacz swój profil</a>"
             </div>
         </div>
         <div class="buttons-section">
-            <button type="button" onclick="@(() => Console.WriteLine("profil dude"))">Profil</button>
+            <button type="button" @onclick="@(() => {NavigationManager.NavigateTo("/User/");})">Profil</button>
             <button type="button" @onclick="@(() => {authenticationService?.LogoutUser();})">Logout</button>
         </div>
     </div>

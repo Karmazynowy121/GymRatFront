@@ -1,16 +1,18 @@
 ﻿@page "/trainingpage/{Id}"
+@using GymRatApi.Commands.TrainingCommands;
 @using GymRatApi.Dto;
 
 <div class="training-edit">
+    @if (Training is not null)
+    {
+        <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
+            <InputText @bind-Value="Training.Description" />
+            <InputNumber @bind-Value="Training.TrainingDuration" />
+            <InputNumber @bind-Value="Training.Interval" />
+            <button type="submit">Edytuj</button>
+        </EditForm>
 
-    <EditForm Model="@Training" OnSubmit="HandleValidSubmit">
-        <InputNumber @bind-Value="Training.Id" />
-        <InputText @bind-Value="Training.Description" />
-        <InputDate @bind-Value="Training.TrainingDate" />
-        <InputNumber @bind-Value="Training.TrainingDuration" />
-        <InputNumber @bind-Value="Training.Interval" />
-        <button type="submit">Edytuj</button>
-    </EditForm>
+    }
 </div>
 @code {
 
@@ -18,7 +20,6 @@
     public string Id { get; set; }
     [Parameter]
     public TrainingDto Training { get; set; }
-
     //private TrainingDto trainingData;
 
     protected override async Task OnInitializedAsync()
@@ -31,13 +32,23 @@
         var client = new HttpClient();
         return await client.GetFromJsonAsync<TrainingDto>($"https://localhost:7060/training/{Id}");
     }
-    private async void HandleValidSubmit(object e)
+    private async void HandleValidSubmit(EditContext e)
     {
-        var moduleObject = e as Microsoft.AspNetCore.Components.Forms.EditContext;
-        var trainingDto = moduleObject.Model as TrainingDto;
+        var trainingDto = e.Model as TrainingDto;
+        if (trainingDto is not null)
+        {
+            var trainingUpdateCommand = new TrainingUpdateCommand()
+            {
+                Id = trainingDto.Id,
+                Description = trainingDto.Description,
+                Interval = trainingDto.Interval,
+                TrainingDuration= trainingDto.TrainingDuration,
+                TrainingScheuldeId = trainingDto.TrainingScheuldeId
+            };
 
-        var client = new HttpClient();
 
-        var response = await client.PostAsJsonAsync<TrainingDto>($"https://localhost:7060/training/{Id}", trainingDto);
+           var client = new HttpClient();
+            var response = await client.PostAsJsonAsync<TrainingUpdateCommand>($"https://localhost:7060/training/", trainingUpdateCommand);
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@using GymRatFront.Providers; 
 @using GymRatFront.ClientService;
+@using GymRatFront.Shared.Buttons;
 @inject IAuthenticationService authenticationService
+@inject NavigationManager NavigationManager
 
 <AuthorizeView>
     <NotAuthorized>
@@ -17,7 +19,8 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
             <a href="https://localhost:7265/TrainingScheulde">TrainingSchedule</a>
             <a href="#" @onclick="@(() => {authenticationService.LogoutUser();})">Logout</a>
-            <GymRatFront.Shared.UserProfileButton />
+            <a href="#" @onclick="@(() => {NavigationManager.NavigateTo("/User/");})">User</a>
+            <ProfileButtonrazor />
         </div>
     </Authorized>
 </AuthorizeView>
